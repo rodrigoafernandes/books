@@ -1,0 +1,48 @@
+quarkus:
+  application:
+    name: books
+  swagger-ui:
+    always-include: true
+  log:
+    console:
+      format: '%d{HH:mm:ss} %-5p traceId=%X{traceId}, parentId=%X{parentId}, spanId=%X{spanId}, sampled=%X{sampled} [%c{2.}] (%t) %s%e%n'
+  datasource:
+    db-kind: ${DB_PLATFORM:oracle}
+    username: ${DATABASE_USER:SYSTEM}
+    password: ${DATABASE_PASSWD:admin123}
+    jdbc:
+      url: jdbc:${DB_PLATFORM:oracle:thin:@}${DATABASE_HOST:localhost}:${DATABASE_PORT:1521}/${DATABASE_NAME:XE}
+  flyway:
+    table: ${DATABASE_MIGRATION_TABLE:BOOKS_MIGRATION}
+    migrate-at-start: ${DATABASE_MIGRATION_ONSTART:true}
+    baseline-on-migrate: ${DATABASE_IS_BASELINE_ON_MIGRATE:true}
+    baseline-version: ${DATABASE_BASELINE_VERSION:0.0.0}
+    sql-migration-prefix: ${DATABASE_MIGRATION_PREFIX:V}
+r2dbc:
+  url: r2dbc:${DB_PLATFORM:oracle}://${DATABASE_USER:SYSTEM}:${DATABASE_PASSWD:admin123}@${DATABASE_HOST:localhost}:${DATABASE_PORT:1521}/${DATABASE_NAME:XE}
+  max-size: ${DATABASE_POOL_MAX_SIZE:50}
+  initial-size: ${DATABASE_POOL_INITIAL_SIZE:10}
+  max-idle-time: ${DATABASE_POOL_MAX_IDLE_TIME:60}
+  validation-query: ${DATABASE_VALIDATION_QUERY:SELECT 1 FROM DUAL}
+
+"%test":
+  quarkus:
+    datasource:
+      db-kind: h2
+      username: sa
+      password: sa
+      jdbc:
+        url: jdbc:h2:mem:testDb?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    flyway:
+      migrate-at-start: true
+      baseline-on-migrate: true
+      baseline-version: 0.0.0
+      sql-migration-prefix: V
+  r2dbc:
+    database: testDb
+    username: sa
+    password: sa
+    max-size: 5
+    initial-size: 1
+    max-idle-time: 25
+    validation-query: SELECT 1

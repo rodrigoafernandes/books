@@ -1,0 +1,64 @@
+plugins {
+    id 'java'
+    id 'io.quarkus'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}") {
+        exclude group: 'com.h2database', module: 'h2'
+    }
+    implementation 'io.quarkus:quarkus-resteasy-mutiny'
+    implementation 'io.quarkus:quarkus-resteasy-jackson'
+    implementation 'io.quarkus:quarkus-smallrye-openapi'
+    implementation 'io.quarkus:quarkus-config-yaml'
+    implementation 'io.quarkus:quarkus-arc'
+    implementation 'io.quarkus:quarkus-flyway'
+    implementation ('io.quarkus:quarkus-jdbc-oracle') {
+        exclude group: 'com.oracle.database.jdbc', module: 'ojdbc8'
+    }
+    implementation 'com.oracle.database.r2dbc:oracle-r2dbc:0.2.0'
+    implementation 'io.r2dbc:r2dbc-pool:0.8.6.RELEASE'
+    implementation 'io.smallrye.reactive:mutiny-reactor:1.0.0'
+
+    implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
+    implementation "org.apache.commons:commons-lang3:${commonsLang3}"
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    testImplementation ('io.quarkus:quarkus-jdbc-h2')
+    testImplementation ('io.r2dbc:r2dbc-h2:0.9.0.M1')
+
+    testImplementation 'io.quarkus:quarkus-junit5'
+    testImplementation 'io.rest-assured:rest-assured:4.4.0'
+}
+
+group = 'br.com.code.challenge'
+version = '1.0.0'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
