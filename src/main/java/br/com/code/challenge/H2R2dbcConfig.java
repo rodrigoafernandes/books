@@ -26,7 +26,7 @@ public class H2R2dbcConfig {
   String username;
 
   @Inject
-  @ConfigProperty(name = "r2dbc.url")
+  @ConfigProperty(name = "r2dbc.password")
   String password;
 
   @Inject
@@ -49,14 +49,12 @@ public class H2R2dbcConfig {
   @IfBuildProfile("test")
   ConnectionPool connectionPool() {
     final var connectionOptions = ConnectionFactoryOptions.builder()
-        .option(DRIVER, "h2")
-        .option(PROTOCOL, "mem")
-        .option(DATABASE, database)
-        .option(Option.sensitiveValueOf("DB_CLOSE_DELAY"), "-1")
-        .option(Option.sensitiveValueOf("DB_CLOSE_ON_EXIT"), "FALSE")
-        .option(USER, username)
-        .option(PASSWORD, password)
-        .build();
+            .option(DRIVER, "h2")
+            .option(PROTOCOL, "mem")
+            .option(DATABASE, database)
+            .option(USER, username)
+            .option(PASSWORD, password)
+            .build();
 
     final var factory = ConnectionFactories.get(connectionOptions);
 

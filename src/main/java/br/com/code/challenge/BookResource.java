@@ -4,18 +4,29 @@ import io.r2dbc.pool.ConnectionPool;
 import io.r2dbc.spi.Statement;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
+import java.util.Optional;
 
 @Path("/books")
 public class BookResource {
 
     @Inject
     ConnectionPool connectionPool;
+
+    @ConfigProperty(name = "r2dbc.book-param-prefix")
+    Optional<String> bookNameParamPrefix;
+
+    @ConfigProperty(name = "r2dbc.book-name-param-value")
+    String bookNameParamValue;
+
+    @ConfigProperty(name = "r2dbc.book-id-param-value")
+    String bookIdParamValue;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -33,7 +44,7 @@ public class BookResource {
                 Multi.createFrom().publisher(
                     result.map((row, rowMetadata) ->
                         Book.builder()
-                            .id(row.get("id", Long.class))
+                            .id(row.get("id", Integer.class))
                             .name(row.get("name", String.class))
                             .build()))
             )
@@ -43,20 +54,21 @@ public class BookResource {
     @POST
     public Uni<Response> create(@Context UriInfo uriInfo,
                                 @RequestBody Book book) {
+        final var prefix = bookNameParamPrefix.orElse("");
         final var createConnectionCall = Uni.createFrom().publisher(connectionPool.create());
 
         return createConnectionCall
             .onItem()
             .transform(connection ->
-                connection.createStatement("INSERT INTO Books (name) VALUES (:bookName)")
-                    .bind("bookName", book.getName())
+                connection.createStatement("INSERT INTO Books (name) VALUES (" + prefix + bookNameParamValue +")")
+                    .bind(bookNameParamValue, book.getName())
                     .returnGeneratedValues("id"))
             .onItem()
             .transformToMulti(Statement::execute)
             .onItem()
             .transformToMultiAndMerge(result ->
                 result.map((row, rowMetadata) ->
-                    book.setId(row.get("id", Long.class))
+                    book.setId(row.get("id", Integer.class))
                 )
             )
             .collect()
@@ -71,13 +83,14 @@ public class BookResource {
     @GET
     @Path("/{id}")
     public Uni<Response> findById(@PathParam("id") Long id) {
+        final var prefix = bookNameParamPrefix.orElse("");
         final var createConnectionCall = Uni.createFrom().publisher(connectionPool.create());
 
         return createConnectionCall
             .onItem()
             .transform(connection ->
-                connection.createStatement("SELECT * FROM Books WHERE id = :id")
-                    .bind("id", id)
+                connection.createStatement("SELECT * FROM Books WHERE id = " + prefix + bookIdParamValue)
+                    .bind(bookIdParamValue, id)
             )
             .onItem()
             .transformToMulti(Statement::execute)
@@ -85,7 +98,7 @@ public class BookResource {
             .transformToMultiAndMerge(result ->
                 result.map((row, rowMetadata) ->
                     Book.builder()
-                        .id(row.get("id", Long.class))
+                        .id(row.get("id", Integer.class))
                         .name(row.get("name", String.class))
                         .build()
                 )

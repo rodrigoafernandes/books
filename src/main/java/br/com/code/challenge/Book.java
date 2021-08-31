@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class Book implements Serializable {
 
-  private Long id;
+  private Integer id;
 
   private String name;
 

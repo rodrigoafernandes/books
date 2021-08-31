@@ -24,6 +24,9 @@ r2dbc:
   initial-size: ${DATABASE_POOL_INITIAL_SIZE:10}
   max-idle-time: ${DATABASE_POOL_MAX_IDLE_TIME:60}
   validation-query: ${DATABASE_VALIDATION_QUERY:SELECT 1 FROM DUAL}
+  book-param-prefix: ":"
+  book-id-param-value: id
+  book-name-param-value: bookName
 
 "%test":
   quarkus:
@@ -32,17 +35,20 @@ r2dbc:
       username: sa
       password: sa
       jdbc:
-        url: jdbc:h2:mem:testDb?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+        url: jdbc:h2:mem:test
     flyway:
       migrate-at-start: true
       baseline-on-migrate: true
       baseline-version: 0.0.0
       sql-migration-prefix: V
   r2dbc:
-    database: testDb
+    database: test
     username: sa
     password: sa
     max-size: 5
     initial-size: 1
     max-idle-time: 25
     validation-query: SELECT 1
+    book-param-prefix: ""
+    book-id-param-value: $1
+    book-name-param-value: $1
