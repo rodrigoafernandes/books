@@ -1,4 +1,4 @@
-FROM quay.io/quarkus/ubi-quarkus-native-image:21.0.0-java11 as build
+FROM quay.io/quarkus/ubi-quarkus-native-image:21.2.0-java11 as build
 WORKDIR /usr/src/app
 COPY . /usr/src/app/
 USER root

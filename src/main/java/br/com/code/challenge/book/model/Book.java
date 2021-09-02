@@ -1,4 +1,4 @@
-package br.com.code.challenge;
+package br.com.code.challenge.book.model;
 
 import lombok.*;
 import lombok.experimental.Accessors;

@@ -1,25 +1,21 @@
-# hibernate Project
+# Quarkus + Flyway + R2dbc + OracleDB
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
-
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+Sample project using [Quarkus](https://quarkus.io/) (the Supersonic Subatomic Java Framework), [Flyway](https://flywaydb.org/) (See also https://quarkus.io/guides/flyway), [R2DBC](https://r2dbc.io/) and [OracleDB](https://github.com/oracle/oracle-r2dbc) (See also https://docs.oracle.com/en/database/oracle/oracle-database/index.html).
 
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
 ```shell script
-./mvnw compile quarkus:dev
+./gradlew quarkusDev
 ```
-
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
 
 ## Packaging and running the application
 
 The application can be packaged using:
 ```shell script
-./mvnw package
+./gradlew clean build
 ```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
+It produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
 Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
 
 If you want to build an _über-jar_, execute the following command:

@@ -1,5 +1,6 @@
-package br.com.code.challenge;
+package br.com.code.challenge.book.resource.exception.handler;
 
+import br.com.code.challenge.book.exception.BookNotFoundException;
 import org.apache.http.HttpStatus;
 
 import javax.ws.rs.core.Response;

@@ -1,4 +1,4 @@
-package br.com.code.challenge;
+package br.com.code.challenge.book.exception;
 
 public class BookNotFoundException extends RuntimeException {
 }

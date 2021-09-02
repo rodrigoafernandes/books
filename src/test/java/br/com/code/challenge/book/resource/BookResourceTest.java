@@ -1,8 +1,8 @@
-package br.com.code.challenge;
+package br.com.code.challenge.book.resource;
 
+import br.com.code.challenge.book.model.Book;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.common.mapper.TypeRef;
-import io.restassured.http.ContentType;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Test;
 

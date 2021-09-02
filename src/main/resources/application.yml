@@ -18,15 +18,14 @@ quarkus:
     baseline-on-migrate: ${DATABASE_IS_BASELINE_ON_MIGRATE:true}
     baseline-version: ${DATABASE_BASELINE_VERSION:0.0.0}
     sql-migration-prefix: ${DATABASE_MIGRATION_PREFIX:V}
+  native:
+    additional-build-args: --trace-object-instantiation=javax.management.MBeanServer
 r2dbc:
   url: r2dbc:${DB_PLATFORM:oracle}://${DATABASE_USER:SYSTEM}:${DATABASE_PASSWD:admin123}@${DATABASE_HOST:localhost}:${DATABASE_PORT:1521}/${DATABASE_NAME:XE}
   max-size: ${DATABASE_POOL_MAX_SIZE:50}
   initial-size: ${DATABASE_POOL_INITIAL_SIZE:10}
   max-idle-time: ${DATABASE_POOL_MAX_IDLE_TIME:60}
   validation-query: ${DATABASE_VALIDATION_QUERY:SELECT 1 FROM DUAL}
-  book-param-prefix: ":"
-  book-id-param-value: id
-  book-name-param-value: bookName
 
 "%test":
   quarkus:
@@ -49,6 +48,3 @@ r2dbc:
     initial-size: 1
     max-idle-time: 25
     validation-query: SELECT 1
-    book-param-prefix: ""
-    book-id-param-value: $1
-    book-name-param-value: $1

@@ -1,20 +1,33 @@
-package br.com.code.challenge;
+package br.com.code.challenge.book.config;
 
+import io.quarkus.arc.profile.IfBuildProfile;
 import io.quarkus.arc.profile.UnlessBuildProfile;
 import io.r2dbc.pool.ConnectionPool;
 import io.r2dbc.pool.ConnectionPoolConfiguration;
 import io.r2dbc.spi.ConnectionFactories;
+import io.r2dbc.spi.ConnectionFactoryOptions;
+import io.r2dbc.spi.Option;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import java.time.Duration;
 
-public class OracleR2dbcConfig {
+import static io.r2dbc.spi.ConnectionFactoryOptions.*;
+
+public class H2R2dbcConfig {
 
   @Inject
-  @ConfigProperty(name = "r2dbc.url")
-  String url;
+  @ConfigProperty(name = "r2dbc.database")
+  String database;
+
+  @Inject
+  @ConfigProperty(name = "r2dbc.username")
+  String username;
+
+  @Inject
+  @ConfigProperty(name = "r2dbc.password")
+  String password;
 
   @Inject
   @ConfigProperty(name = "r2dbc.max-size")
@@ -33,9 +46,17 @@ public class OracleR2dbcConfig {
   String validationQuery;
 
   @Produces
-  @UnlessBuildProfile("test")
+  @IfBuildProfile("test")
   ConnectionPool connectionPool() {
-    final var factory = ConnectionFactories.get(url);
+    final var connectionOptions = ConnectionFactoryOptions.builder()
+            .option(DRIVER, "h2")
+            .option(PROTOCOL, "mem")
+            .option(DATABASE, database)
+            .option(USER, username)
+            .option(PASSWORD, password)
+            .build();
+
+    final var factory = ConnectionFactories.get(connectionOptions);
 
     final var pollConfiguration = ConnectionPoolConfiguration.builder()
         .connectionFactory(factory)
@@ -43,6 +64,7 @@ public class OracleR2dbcConfig {
         .initialSize(initialSize)
         .maxIdleTime(Duration.ofMinutes(maxIdleTime))
         .validationQuery(validationQuery)
+        .registerJmx(false)
         .build();
 
     return new ConnectionPool(pollConfiguration);
