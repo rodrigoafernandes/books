@@ -19,9 +19,14 @@ quarkus:
     baseline-version: ${DATABASE_BASELINE_VERSION:0.0.0}
     sql-migration-prefix: ${DATABASE_MIGRATION_PREFIX:V}
   native:
-    additional-build-args: --trace-object-instantiation=javax.management.MBeanServer
+    additional-build-args: --trace-object-instantiation=com.sun.jmx.mbeanserver.JmxMBeanServer
 r2dbc:
   url: r2dbc:${DB_PLATFORM:oracle}://${DATABASE_USER:SYSTEM}:${DATABASE_PASSWD:admin123}@${DATABASE_HOST:localhost}:${DATABASE_PORT:1521}/${DATABASE_NAME:XE}
+  host: ${DATABASE_HOST:localhost}
+  port: ${DATABASE_PORT:1521}
+  database: ${DATABASE_NAME:XE}
+  username: ${DATABASE_USER:SYSTEM}
+  password: ${DATABASE_PASSWD:admin123}
   max-size: ${DATABASE_POOL_MAX_SIZE:50}
   initial-size: ${DATABASE_POOL_INITIAL_SIZE:10}
   max-idle-time: ${DATABASE_POOL_MAX_IDLE_TIME:60}
