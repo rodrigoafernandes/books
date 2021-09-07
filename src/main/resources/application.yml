@@ -18,10 +18,7 @@ quarkus:
     baseline-on-migrate: ${DATABASE_IS_BASELINE_ON_MIGRATE:true}
     baseline-version: ${DATABASE_BASELINE_VERSION:0.0.0}
     sql-migration-prefix: ${DATABASE_MIGRATION_PREFIX:V}
-  native:
-    additional-build-args: --trace-object-instantiation=com.sun.jmx.mbeanserver.JmxMBeanServer
 r2dbc:
-  url: r2dbc:${DB_PLATFORM:oracle}://${DATABASE_USER:SYSTEM}:${DATABASE_PASSWD:admin123}@${DATABASE_HOST:localhost}:${DATABASE_PORT:1521}/${DATABASE_NAME:XE}
   host: ${DATABASE_HOST:localhost}
   port: ${DATABASE_PORT:1521}
   database: ${DATABASE_NAME:XE}

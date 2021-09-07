@@ -1,4 +1,4 @@
-package br.com.code.challenge.book.config;
+package br.com.code.challenge.book.configuration;
 
 import io.quarkus.arc.profile.UnlessBuildProfile;
 import io.r2dbc.pool.ConnectionPool;
@@ -14,10 +14,6 @@ import java.time.Duration;
 import static io.r2dbc.spi.ConnectionFactoryOptions.*;
 
 public class OracleR2dbcConfig {
-
-  @Inject
-  @ConfigProperty(name = "r2dbc.url")
-  String url;
 
   @Inject
   @ConfigProperty(name = "r2dbc.host")
@@ -59,7 +55,8 @@ public class OracleR2dbcConfig {
   @UnlessBuildProfile("test")
   ConnectionPool connectionPool() {
     final var factoryOptions = ConnectionFactoryOptions.builder()
-        .option(DRIVER, "oracle")
+        .option(DRIVER, "pool")
+        .option(PROTOCOL, "oracle")
         .option(HOST, host)
         .option(PORT, Integer.valueOf(port))
         .option(DATABASE, database)
